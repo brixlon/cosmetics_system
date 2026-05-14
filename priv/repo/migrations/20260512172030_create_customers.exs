@@ -22,7 +22,10 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateCustomers do
 
     create table(:addresses, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :customer_id, references(:customers, type: :binary_id, on_delete: :delete_all), null: false
+
+      add :customer_id, references(:customers, type: :binary_id, on_delete: :delete_all),
+        null: false
+
       add :label, :string, default: "home"
       add :line1, :string, null: false
       add :line2, :string
@@ -38,4 +41,3 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateCustomers do
     create index(:addresses, [:customer_id])
   end
 end
-

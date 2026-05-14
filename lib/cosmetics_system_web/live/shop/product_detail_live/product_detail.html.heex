@@ -1,0 +1,80 @@
+<div class="product-detail">
+  <div class="product-gallery">
+    <%= if @active_image do %>
+      <img src={@active_image.url} alt={@product.name} class="gallery__main" />
+    <% end %>
+    <div class="gallery__thumbs">
+      <img
+        :for={img <- @product.images}
+        src={img.url}
+        alt=""
+        phx-click="select_image"
+        phx-value-id={img.id}
+        class={"gallery__thumb #{if @active_image && @active_image.id == img.id, do: "active"}"}
+      />
+    </div>
+  </div>
+
+  <div class="product-info">
+    <span class="product-info__category">{@product.category && @product.category.name}</span>
+    <h1>{@product.name}</h1>
+    <p class="product-info__price">KES {@product.base_price}</p>
+
+    <%= if length(@product.variants) > 0 do %>
+      <div class="variants">
+        <label>Choose shade / size:</label>
+        <div class="variant-options">
+          <button
+            :for={v <- @product.variants}
+            phx-click="select_variant"
+            phx-value-id={v.id}
+            class={"variant-btn #{if @selected_variant && @selected_variant.id == v.id, do: "selected"} #{if v.stock_quantity == 0, do: "out-of-stock"}"}
+            disabled={v.stock_quantity == 0}
+          >
+            {v.name}
+          </button>
+        </div>
+      </div>
+    <% end %>
+
+    <%= if @selected_variant do %>
+      <p class={"stock-status stock-status--#{stock_class(@selected_variant)}"}>
+        {stock_label(@selected_variant)}
+      </p>
+    <% end %>
+
+    <div class="quantity-selector">
+      <button phx-click="set_quantity" phx-value-qty={max(1, @quantity - 1)}>−</button>
+      <span>{@quantity}</span>
+      <button phx-click="set_quantity" phx-value-qty={@quantity + 1}>+</button>
+    </div>
+
+    <button
+      phx-click="add_to_cart"
+      id="btn-add-to-cart"
+      class="btn btn--primary btn--lg btn--full"
+      disabled={is_nil(@selected_variant) || @selected_variant.stock_quantity == 0}
+    >
+      Add to Cart
+    </button>
+
+    <div class="product-tabs">
+      <div class="tab">
+        <h3>Description</h3>
+        <p>{@product.description}</p>
+      </div>
+      <%= if @product.ingredients do %>
+        <div class="tab">
+          <h3>Ingredients</h3>
+          <p>{@product.ingredients}</p>
+        </div>
+      <% end %>
+      <%= if @product.how_to_use do %>
+        <div class="tab">
+          <h3>How to Use</h3>
+          <p>{@product.how_to_use}</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

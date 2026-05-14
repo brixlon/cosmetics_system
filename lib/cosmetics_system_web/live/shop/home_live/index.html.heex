@@ -1,0 +1,27 @@
+<div class="shop-home">
+  <section class="hero">
+    <h1>Discover Your Beauty</h1>
+    <p>Premium cosmetics — skincare, makeup, fragrance & more.</p>
+    <.link navigate={~p"/shop/products"} class="btn btn--primary btn--lg">Shop Now</.link>
+  </section>
+
+  <section class="categories">
+    <h2>Browse by Category</h2>
+    <div class="category-grid">
+      <.link
+        :for={cat <- @categories}
+        navigate={~p"/shop/categories/#{cat.slug}"}
+        class="category-card"
+      >
+        <span>{cat.name}</span>
+      </.link>
+    </div>
+  </section>
+
+  <section class="featured-products">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+      <.product_card :for={product <- @featured} product={product} />
+    </div>
+  </section>
+</div>

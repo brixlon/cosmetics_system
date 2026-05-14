@@ -19,7 +19,8 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateCatalog do
     create table(:products, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :category_id, references(:categories, type: :binary_id, on_delete: :nilify_all)
-      add :supplier_id, :binary_id  # references suppliers (added after)
+      # references suppliers (added after)
+      add :supplier_id, :binary_id
       add :name, :string, null: false
       add :slug, :string, null: false
       add :sku, :string, null: false
@@ -43,7 +44,10 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateCatalog do
 
     create table(:product_variants, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :product_id, references(:products, type: :binary_id, on_delete: :delete_all), null: false
+
+      add :product_id, references(:products, type: :binary_id, on_delete: :delete_all),
+        null: false
+
       add :name, :string, null: false
       add :sku, :string, null: false
       add :shade, :string
@@ -62,7 +66,10 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateCatalog do
 
     create table(:product_images, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :product_id, references(:products, type: :binary_id, on_delete: :delete_all), null: false
+
+      add :product_id, references(:products, type: :binary_id, on_delete: :delete_all),
+        null: false
+
       add :url, :string, null: false
       add :alt_text, :string
       add :position, :integer, default: 0

@@ -1,0 +1,22 @@
+<div class="product-modal-form">
+  <h2 class="modal-title" id="product-form-title">{form_title(@product)}</h2>
+  <.form for={@form} id="product-form" phx-submit="save" class="space-y-4">
+    <.input field={@form[:name]} type="text" label="Name" required />
+    <.input field={@form[:sku]} type="text" label="SKU" required />
+    <.input field={@form[:base_price]} type="number" label="Base price (KES)" step="any" required />
+    <.input field={@form[:description]} type="textarea" label="Description" />
+    <.input
+      field={@form[:category_id]}
+      type="select"
+      label="Category"
+      options={@category_options}
+      prompt="Select category"
+    />
+    <div class="modal-actions">
+      <.link patch={~p"/admin/products"} class="btn btn--ghost">Cancel</.link>
+      <button type="submit" class="btn btn--primary" id="product-form-submit">
+        Save product
+      </button>
+    </div>
+  </.form>
+</div>

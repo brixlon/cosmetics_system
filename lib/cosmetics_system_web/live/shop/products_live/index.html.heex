@@ -1,0 +1,19 @@
+<div class="shop-page shop-page--catalog">
+  <header class="shop-page-header">
+    <h1 class="shop-page-title">All products</h1>
+    <p class="shop-page-sub">
+      Browse the full catalogue — tap a product for details, variants, and cart actions.
+    </p>
+  </header>
+
+  <ul class="shop-product-list" id="shop-product-list">
+    <li :for={p <- @products} class="shop-product-list__item">
+      <.link navigate={~p"/shop/products/#{p.slug}"} class="shop-product-list__link">
+        <span class="shop-product-list__name">{p.name}</span>
+        <%= if p.category do %>
+          <span class="shop-product-list__meta">{p.category.name}</span>
+        <% end %>
+      </.link>
+    </li>
+  </ul>
+</div>

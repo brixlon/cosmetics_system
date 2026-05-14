@@ -1,0 +1,18 @@
+<div class="shop-page">
+  <%= if assigns[:category] do %>
+    <header class="shop-page-header">
+      <h1 class="shop-page-title">{@category.name}</h1>
+      <p class="shop-page-sub">
+        Products in this category will appear here in a responsive grid with the same cards as the home store.
+      </p>
+    </header>
+    <div class="shop-placeholder-card">
+      <.icon name="hero-squares-2x2" class="w-10 h-10 opacity-40" />
+      <p>Category listing is not implemented yet.</p>
+    </div>
+  <% else %>
+    <div class="shop-placeholder-card">
+      <p class="text-base-content/70">Loading category…</p>
+    </div>
+  <% end %>
+</div>

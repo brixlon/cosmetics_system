@@ -29,7 +29,10 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateProcurement do
 
     create table(:purchase_orders, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :supplier_id, references(:suppliers, type: :binary_id, on_delete: :restrict), null: false
+
+      add :supplier_id, references(:suppliers, type: :binary_id, on_delete: :restrict),
+        null: false
+
       add :employee_id, references(:employees, type: :binary_id, on_delete: :nilify_all)
       add :number, :string, null: false
       add :status, :string, null: false, default: "draft"
@@ -47,7 +50,11 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateProcurement do
 
     create table(:purchase_order_items, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :purchase_order_id, references(:purchase_orders, type: :binary_id, on_delete: :delete_all), null: false
+
+      add :purchase_order_id,
+          references(:purchase_orders, type: :binary_id, on_delete: :delete_all),
+          null: false
+
       add :product_id, references(:products, type: :binary_id, on_delete: :restrict), null: false
       add :variant_id, references(:product_variants, type: :binary_id, on_delete: :restrict)
       add :quantity, :integer, null: false

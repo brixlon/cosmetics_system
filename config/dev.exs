@@ -53,6 +53,9 @@ config :cosmetics_system, CosmeticsSystemWeb.Endpoint,
 # different ports.
 
 # Reload browser tabs when matching files change.
+# On Linux, install inotifywait (Debian/Ubuntu: sudo apt install inotify-tools) so
+# phoenix_live_reload can watch the tree; without it, live reload is skipped only.
+# Tailwind’s --watch may print "watchman: not found"; CSS rebuild still works without watchman.
 config :cosmetics_system, CosmeticsSystemWeb.Endpoint,
   live_reload: [
     web_console_logger: true,

@@ -124,6 +124,35 @@ defmodule CosmeticsSystemWeb.CoreComponents do
   end
 
   @doc """
+  Modal overlay with backdrop click and Escape to run `on_cancel` (typically `JS.patch/1`).
+
+  Renders nothing visible when `show` is false.
+  """
+  attr :id, :string, required: true
+  attr :show, :boolean, default: false
+  attr :on_cancel, :any, required: true
+  slot :inner_block, required: true
+
+  def modal(assigns) do
+    ~H"""
+    <div
+      id={@id}
+      class={[
+        "fixed inset-0 z-50 flex items-center justify-center p-4",
+        !@show && "hidden"
+      ]}
+      phx-window-keydown={if(@show, do: @on_cancel)}
+      phx-key="Escape"
+    >
+      <div class="absolute inset-0 bg-base-300/60 backdrop-blur-sm" phx-click={@on_cancel}></div>
+      <div class="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-box border border-base-200 bg-base-100 p-6 shadow-lg">
+        {render_slot(@inner_block)}
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
   Renders an input with label and error messages.
 
   A `Phoenix.HTML.FormField` may be passed as argument,

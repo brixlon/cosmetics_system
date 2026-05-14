@@ -4,7 +4,10 @@ defmodule CosmeticsSystem.Repo.Migrations.CreateOrders do
   def change do
     create table(:orders, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :customer_id, references(:customers, type: :binary_id, on_delete: :restrict), null: false
+
+      add :customer_id, references(:customers, type: :binary_id, on_delete: :restrict),
+        null: false
+
       add :shipping_address_id, references(:addresses, type: :binary_id, on_delete: :nilify_all)
       add :number, :string, null: false
       add :status, :string, null: false, default: "pending"

@@ -6,9 +6,12 @@ defmodule CosmeticsSystem.Orders.Payment do
   @foreign_key_type :binary_id
 
   schema "payments" do
+    field :provider, :string
+    field :provider_ref, :string
     field :amount, :decimal
-    field :method, :string
+    field :currency, :string, default: "KES"
     field :status, :string, default: "pending"
+    field :metadata, :map
 
     belongs_to :order, CosmeticsSystem.Orders.Order
 
@@ -17,7 +20,7 @@ defmodule CosmeticsSystem.Orders.Payment do
 
   def changeset(payment, attrs) do
     payment
-    |> cast(attrs, [:amount, :method, :status, :order_id])
-    |> validate_required([:amount, :order_id])
+    |> cast(attrs, [:provider, :provider_ref, :amount, :currency, :status, :metadata, :order_id])
+    |> validate_required([:amount, :order_id, :provider])
   end
 end

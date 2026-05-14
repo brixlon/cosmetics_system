@@ -1,0 +1,58 @@
+<div class="admin-page admin-page--wide">
+  <div class="page-header">
+    <h1 class="admin-page-title">Products</h1>
+    <.link patch={~p"/admin/products/new"} class="btn btn--primary" id="btn-new-product">
+      <.icon name="hero-plus" /> New Product
+    </.link>
+  </div>
+
+  <div class="filters">
+    <input
+      type="search"
+      id="product-search"
+      placeholder="Search products…"
+      phx-keyup="search"
+      phx-debounce="300"
+      value={@search}
+    />
+  </div>
+
+  <.table id="products" rows={@products}>
+    <:col :let={p} label="Name">
+      <div class="product-cell">
+        <%= if img = List.first(p.images) do %>
+          <img src={img.url} class="product-thumb" alt="" />
+        <% end %>
+        <span>{p.name}</span>
+      </div>
+    </:col>
+    <:col :let={p} label="SKU"><code>{p.sku}</code></:col>
+    <:col :let={p} label="Category">{p.category && p.category.name}</:col>
+    <:col :let={p} label="Price">KES {p.base_price}</:col>
+    <:col :let={p} label="Variants">{length(p.variants)}</:col>
+    <:col :let={p} label="Status">
+      <button
+        phx-click="toggle_active"
+        phx-value-id={p.id}
+        class={"badge badge--#{if p.active, do: "success", else: "neutral"}"}
+      >
+        {if p.active, do: "Active", else: "Inactive"}
+      </button>
+    </:col>
+    <:action :let={p}>
+      <.link patch={~p"/admin/products/#{p.id}/edit"}>Edit</.link>
+    </:action>
+  </.table>
+
+  <%= if @live_action in [:new, :edit] do %>
+    <.modal id="product-modal" show on_cancel={JS.patch(~p"/admin/products")}>
+      <.live_component
+        module={CosmeticsSystemWeb.Admin.ProductFormComponent}
+        id={@product.id || :new}
+        product={@product}
+        changeset={@changeset}
+        categories={Catalog.list_categories()}
+      />
+    </.modal>
+  <% end %>
+</div>

@@ -1,0 +1,36 @@
+<div class="admin-page admin-page--wide">
+  <div class="page-header">
+    <h1 class="admin-page-title">Orders</h1>
+    <div class="status-filters" id="order-status-filters">
+      <%= for status <- ~w(all pending processing shipped delivered cancelled) do %>
+        <button
+          phx-click="filter_status"
+          phx-value-status={if status == "all", do: "", else: status}
+          class={"btn-filter #{if order_filter_active?(@status_filter, status), do: "active"}"}
+        >
+          {String.capitalize(status)}
+        </button>
+      <% end %>
+    </div>
+  </div>
+
+  <.table id="orders" rows={@orders}>
+    <:col :let={o} label="Order #">
+      <.link navigate={~p"/admin/orders/#{o.id}"}>{o.number}</.link>
+    </:col>
+    <:col :let={o} label="Customer">{o.customer.first_name} {o.customer.last_name}</:col>
+    <:col :let={o} label="Items">{length(o.items)}</:col>
+    <:col :let={o} label="Total">KES {o.total}</:col>
+    <:col :let={o} label="Payment">
+      <span class={"badge badge--#{payment_badge(o.payment_status)}"}>{o.payment_status}</span>
+    </:col>
+    <:col :let={o} label="Status">
+      <select phx-change="update_status" phx-value-id={o.id} name="status">
+        <%= for s <- ~w(pending processing shipped delivered cancelled) do %>
+          <option value={s} selected={o.status == s}>{String.capitalize(s)}</option>
+        <% end %>
+      </select>
+    </:col>
+    <:col :let={o} label="Date">{Calendar.strftime(o.inserted_at, "%d %b %Y")}</:col>
+  </.table>
+</div>

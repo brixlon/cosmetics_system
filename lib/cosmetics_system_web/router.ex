@@ -14,10 +14,46 @@ defmodule CosmeticsSystemWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :require_authenticated_user do
+    plug :fetch_current_scope_for_admin
+  end
+
+  pipeline :require_admin do
+    plug :ensure_admin_scope
+  end
+
   scope "/", CosmeticsSystemWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+  end
+
+  scope "/admin", CosmeticsSystemWeb.Admin, as: :admin do
+    pipe_through [:browser, :require_authenticated_user, :require_admin]
+
+    live "/", DashboardLive, :index
+    live "/products", ProductsLive, :index
+    live "/products/new", ProductsLive, :new
+    live "/products/:id/edit", ProductsLive, :edit
+    live "/orders", OrdersLive, :index
+    live "/orders/:id", OrderDetailLive, :show
+    live "/customers", CustomersLive, :index
+    live "/customers/:id", CustomerDetailLive, :show
+    live "/employees", EmployeesLive, :index
+    live "/suppliers", SuppliersLive, :index
+    live "/purchase-orders", PurchaseOrdersLive, :index
+  end
+
+  scope "/shop", CosmeticsSystemWeb.Shop, as: :shop do
+    pipe_through [:browser]
+
+    live "/", HomeLive, :index
+    live "/products", ProductsLive, :index
+    live "/products/:slug", ProductDetailLive, :show
+    live "/categories/:slug", CategoryLive, :show
+    live "/cart", CartLive, :index
+    live "/checkout", CheckoutLive, :index
+    live "/orders/:number", OrderStatusLive, :show
   end
 
   # Other scopes may use custom stacks.
@@ -40,5 +76,15 @@ defmodule CosmeticsSystemWeb.Router do
       live_dashboard "/dashboard", metrics: CosmeticsSystemWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  defp fetch_current_scope_for_admin(conn, _opts) do
+    # TODO: resolve session and assign current_scope when accounts LiveViews exist.
+    conn
+  end
+
+  defp ensure_admin_scope(conn, _opts) do
+    # TODO: enforce admin role from current_scope.
+    conn
   end
 end

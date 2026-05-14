@@ -1,0 +1,136 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <div>
+      <h1 class="dashboard-title">Dashboard</h1>
+      <p class="dashboard-subtitle">
+        {Calendar.strftime(Date.utc_today(), "%A, %d %B %Y")} — Admin Panel
+      </p>
+    </div>
+    <span class="live-badge">
+      <span class="live-dot"></span> Live
+    </span>
+  </div>
+
+  <div class="kpi-grid">
+    <.kpi_card
+      label="Today's Revenue"
+      value={"KES #{format_number(@stats.today_revenue)}"}
+      icon="hero-currency-dollar"
+      color="green"
+      trend={@stats.today_revenue_trend}
+    />
+    <.kpi_card
+      label="Month Revenue"
+      value={"KES #{format_number(@stats.month_revenue)}"}
+      icon="hero-chart-bar"
+      color="blue"
+      trend={@stats.month_revenue_trend}
+    />
+    <.kpi_card
+      label="Pending Orders"
+      value={@stats.pending}
+      icon="hero-shopping-bag"
+      color="amber"
+      trend={"#{@stats.pending_urgent} need attention"}
+    />
+    <.kpi_card
+      label="Total Customers"
+      value={format_number(@stats.total_customers)}
+      icon="hero-users"
+      color="purple"
+      trend={"+#{@stats.new_customers_week} this week"}
+    />
+    <.kpi_card
+      label="Low Stock Items"
+      value={@stats.low_stock_count}
+      icon="hero-exclamation-triangle"
+      color="red"
+      trend="Restock soon"
+    />
+    <.kpi_card
+      label="Active Staff"
+      value={@stats.active_staff}
+      icon="hero-identification"
+      color="teal"
+      trend={"#{@stats.staff_on_leave} on leave today"}
+    />
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Recent Orders</h2>
+        <.link navigate={~p"/admin/orders"} class="panel-action">
+          View all <span aria-hidden="true">→</span>
+        </.link>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr :for={order <- @recent_orders}>
+            <td>
+              <p class="customer-name">
+                {order.customer.first_name} {order.customer.last_name}
+              </p>
+              <p class="order-number">#{order.number}</p>
+            </td>
+            <td>
+              <span class="amount">KES {format_number(order.total)}</span>
+            </td>
+            <td>
+              <span class={"status-badge status-badge--#{order.status}"}>
+                {order.status}
+              </span>
+            </td>
+            <td class="action-cell">
+              <.link navigate={~p"/admin/orders/#{order.id}"} class="btn-link">
+                View
+              </.link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Low Stock Alerts</h2>
+        <.link navigate={~p"/admin/products"} class="panel-action">
+          Manage <span aria-hidden="true">→</span>
+        </.link>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Stock Level</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr :for={v <- @low_stock}>
+            <td>
+              <p class="customer-name">{v.product.name}</p>
+              <p class="order-number">{v.name}</p>
+            </td>
+            <td>
+              <.stock_bar quantity={v.stock_quantity} threshold={v.low_stock_threshold} />
+            </td>
+            <td class="action-cell">
+              <.link navigate={~p"/admin/products/#{v.product_id}/edit"} class="btn-link">
+                Restock
+              </.link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>
