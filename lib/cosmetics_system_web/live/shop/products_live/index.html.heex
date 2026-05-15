@@ -1,19 +1,52 @@
-<div class="shop-page shop-page--catalog">
-  <header class="shop-page-header">
-    <h1 class="shop-page-title">All products</h1>
-    <p class="shop-page-sub">
-      Browse the full catalogue — tap a product for details, variants, and cart actions.
-    </p>
-  </header>
-
-  <ul class="shop-product-list" id="shop-product-list">
-    <li :for={p <- @products} class="shop-product-list__item">
-      <.link navigate={~p"/shop/products/#{p.slug}"} class="shop-product-list__link">
-        <span class="shop-product-list__name">{p.name}</span>
-        <%= if p.category do %>
-          <span class="shop-product-list__meta">{p.category.name}</span>
-        <% end %>
+<div class="shop-wrapper">
+  <nav class="shop-nav">
+    <.link navigate={~p"/shop"} class="shop-nav__brand">
+      <span></span> Luminae
+    </.link>
+    <ul class="shop-nav__links">
+      <li><.link navigate={~p"/shop/products"}>All Products</.link></li>
+    </ul>
+    <div class="shop-nav__actions">
+      <.link navigate={~p"/shop/cart"} class="shop-nav__cart">
+        <.icon name="hero-shopping-bag" class="w-4 h-4" /> Cart
       </.link>
-    </li>
-  </ul>
+    </div>
+  </nav>
+
+  <div class="shop-page shop-page--catalog">
+    <header class="shop-page-header">
+      <span class="shop-eyebrow">Catalogue</span>
+      <h1 class="shop-page-title">All Products</h1>
+      <p class="shop-page-sub">{length(@products)} products available</p>
+    </header>
+
+    <%= if Enum.empty?(@products) do %>
+      <div class="shop-hero-card">
+        <.icon name="hero-archive-box" class="w-12 h-12 mx-auto mb-3" style="color:var(--shop-text-soft)" />
+        <h2 style="font-family:var(--shop-serif);font-weight:300;color:var(--shop-bark);font-size:1.5rem;margin:0 0 .5rem">
+          No products yet
+        </h2>
+        <p style="color:var(--shop-text-mid);font-size:.9rem">Products will appear here once added from the admin panel.</p>
+      </div>
+    <% else %>
+      <ul class="shop-product-list" id="shop-product-list">
+        <li :for={p <- @products} class="shop-product-list__item">
+          <.link navigate={~p"/shop/products/#{p.slug}"} class="shop-product-list__link">
+            <%= if img = Enum.find(p.images, & &1.is_primary) || List.first(p.images) do %>
+              <img src={img.url} alt={p.name} class="shop-product-list__img" />
+            <% else %>
+              <div class="shop-product-list__img" style="background:var(--shop-cream-dark)"></div>
+            <% end %>
+            <div>
+              <span class="shop-product-list__name">{p.name}</span>
+              <span class="shop-product-list__meta">
+                {p.category && p.category.name} · KES {p.base_price}
+              </span>
+            </div>
+            <.icon name="hero-chevron-right" class="w-4 h-4 ml-auto" style="color:var(--shop-text-soft)" />
+          </.link>
+        </li>
+      </ul>
+    <% end %>
+  </div>
 </div>

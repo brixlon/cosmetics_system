@@ -1,3 +1,4 @@
+<Layouts.app flash={@flash}>
 <div class="admin-page admin-page--wide">
   <div class="page-header">
     <h1 class="admin-page-title">Products</h1>
@@ -32,6 +33,7 @@
     <:col :let={p} label="Variants">{length(p.variants)}</:col>
     <:col :let={p} label="Status">
       <button
+        type="button"
         phx-click="toggle_active"
         phx-value-id={p.id}
         class={"badge badge--#{if p.active, do: "success", else: "neutral"}"}
@@ -56,3 +58,4 @@
     </.modal>
   <% end %>
 </div>
+</Layouts.app>

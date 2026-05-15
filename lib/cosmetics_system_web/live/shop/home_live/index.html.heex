@@ -1,27 +1,126 @@
-<div class="shop-home">
-  <section class="hero">
-    <h1>Discover Your Beauty</h1>
-    <p>Premium cosmetics — skincare, makeup, fragrance & more.</p>
-    <.link navigate={~p"/shop/products"} class="btn btn--primary btn--lg">Shop Now</.link>
-  </section>
+<%# lib/cosmetics_system_web/live/shop/home_live/index.html.heex %>
+<div class="shop-wrapper">
+  <%# ── Navbar ──────────────────────────────────────────── %>
+  <nav class="shop-nav">
+    <.link navigate={~p"/shop"} class="shop-nav__brand">
+      <span></span> Luminae
+    </.link>
 
-  <section class="categories">
-    <h2>Browse by Category</h2>
-    <div class="category-grid">
-      <.link
-        :for={cat <- @categories}
-        navigate={~p"/shop/categories/#{cat.slug}"}
-        class="category-card"
-      >
-        <span>{cat.name}</span>
+    <ul class="shop-nav__links">
+      <li><.link navigate={~p"/shop/products"}>All Products</.link></li>
+      <%= for cat <- Enum.take(@categories, 4) do %>
+        <li><.link navigate={~p"/shop/categories/#{cat.slug}"}>{cat.name}</.link></li>
+      <% end %>
+    </ul>
+
+    <div class="shop-nav__actions">
+      <.link navigate={~p"/shop/cart"} class="shop-nav__cart">
+        <.icon name="hero-shopping-bag" class="w-4 h-4" />
+        Cart
       </.link>
     </div>
-  </section>
+  </nav>
 
-  <section class="featured-products">
-    <h2>Featured Products</h2>
-    <div class="product-grid">
-      <.product_card :for={product <- @featured} product={product} />
+  <%# ── Hero ───────────────────────────────────────────── %>
+  <section class="shop-hero">
+    <div class="shop-hero__content">
+      <span class="shop-hero__eyebrow">Premium Cosmetics · Nairobi</span>
+      <h1 class="shop-hero__title">
+        Beauty<br/>
+        <em>Crafted</em><br/>
+        for You
+      </h1>
+      <p class="shop-hero__sub">
+        Premium skincare, makeup, and fragrance — curated from the world's finest brands, delivered across Kenya.
+      </p>
+      <div class="shop-hero__ctas">
+        <.link navigate={~p"/shop/products"} class="btn-shop-primary">
+          Shop Now
+          <.icon name="hero-arrow-right" class="w-4 h-4" />
+        </.link>
+        <.link navigate={~p"/shop/categories/skincare"} class="btn-shop-secondary">
+          View Skincare
+        </.link>
+      </div>
+    </div>
+    <div class="shop-hero__image-frame">
+      <div class="shop-hero__image-bg"></div>
     </div>
   </section>
+
+  <%# ── Categories ─────────────────────────────────────── %>
+  <section class="shop-categories">
+    <div class="shop-section-header">
+      <h2 class="shop-section-title">Shop by Category</h2>
+      <.link navigate={~p"/shop/products"} class="shop-section-link">
+        All Products <.icon name="hero-arrow-right" class="w-3 h-3" />
+      </.link>
+    </div>
+    <div class="category-grid">
+      <%= for cat <- @categories do %>
+        <.link navigate={~p"/shop/categories/#{cat.slug}"} class="category-card">
+          <div class="category-card__icon">
+            <.icon name="hero-sparkles" class="w-5 h-5" style="color: var(--shop-forest-mid)" />
+          </div>
+          {cat.name}
+        </.link>
+      <% end %>
+      <%= if Enum.empty?(@categories) do %>
+        <%= for name <- ~w(Skincare Makeup Fragrance Haircare Bodycare Wellness) do %>
+          <div class="category-card">
+            <div class="category-card__icon">
+              <.icon name="hero-sparkles" class="w-5 h-5" style="color: var(--shop-forest-mid)" />
+            </div>
+            {name}
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <%# ── Featured Products ───────────────────────────────── %>
+  <section class="shop-featured">
+    <div class="shop-section-header">
+      <h2 class="shop-section-title">Featured Products</h2>
+      <.link navigate={~p"/shop/products"} class="shop-section-link">
+        View All <.icon name="hero-arrow-right" class="w-3 h-3" />
+      </.link>
+    </div>
+
+    <%= if Enum.empty?(@featured) do %>
+      <div style="text-align:center; padding: 3rem; color: var(--shop-text-soft); font-family: var(--shop-serif); font-size: 1.125rem;">
+        Products will appear here once added to the catalog.
+      </div>
+    <% else %>
+      <div class="product-grid">
+        <.product_card :for={product <- @featured} product={product} />
+      </div>
+    <% end %>
+  </section>
+
+  <%# ── Footer ─────────────────────────────────────────── %>
+  <footer>
+    <div class="shop-footer">
+      <div>
+        <p class="shop-footer__brand">Luminae</p>
+        <p class="shop-footer__tagline">Premium beauty & cosmetics, curated for the modern Kenyan woman.</p>
+      </div>
+      <div class="shop-footer__col">
+        <h4>Shop</h4>
+        <.link navigate={~p"/shop/products"}>All Products</.link>
+        <.link navigate={~p"/shop/products"}>New Arrivals</.link>
+        <.link navigate={~p"/shop/products"}>Best Sellers</.link>
+      </div>
+      <div class="shop-footer__col">
+        <h4>Help</h4>
+        <a href="#">Shipping & Delivery</a>
+        <a href="#">Returns</a>
+        <.link navigate={~p"/shop/cart"}>My Cart</.link>
+      </div>
+    </div>
+    <div class="shop-footer__bottom">
+      <span>© {Date.utc_today().year} Luminae. All rights reserved.</span>
+      <span>Nairobi, Kenya</span>
+    </div>
+  </footer>
 </div>

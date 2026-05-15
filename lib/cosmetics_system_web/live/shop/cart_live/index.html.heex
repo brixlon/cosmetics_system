@@ -1,10 +1,33 @@
-<div class="shop-page">
-  <div class="shop-hero-card">
-    <.icon name="hero-shopping-cart" class="w-12 h-12 mb-4 opacity-80" />
-    <h1 class="shop-page-title">Shopping cart</h1>
-    <p class="shop-page-sub max-w-lg">
-      Your bag will sync across sessions and support promo codes before checkout. Hook this LiveView to your cart context when persistence is ready.
-    </p>
-    <.link navigate={~p"/shop/products"} class="btn btn--primary mt-6">Continue shopping</.link>
+<div class="shop-wrapper">
+  <nav class="shop-nav">
+    <.link navigate={~p"/shop"} class="shop-nav__brand"><span></span> Luminae</.link>
+    <ul class="shop-nav__links">
+      <li><.link navigate={~p"/shop/products"}>Continue Shopping</.link></li>
+    </ul>
+    <div class="shop-nav__actions">
+      <.link navigate={~p"/shop/cart"} class="shop-nav__cart">
+        <.icon name="hero-shopping-bag" class="w-4 h-4" /> Cart
+      </.link>
+    </div>
+  </nav>
+
+  <div class="shop-cart-page">
+    <header class="shop-page-header">
+      <span class="shop-eyebrow">Your Bag</span>
+      <h1 class="shop-page-title">Shopping Cart</h1>
+    </header>
+
+    <div class="cart-empty">
+      <.icon name="hero-shopping-bag" class="w-16 h-16 mx-auto" style="color:var(--shop-cream-dark)" />
+      <h2 style="font-family:var(--shop-serif);font-weight:300;font-size:2rem;color:var(--shop-bark);margin:.75rem 0 .5rem">
+        Your cart is empty
+      </h2>
+      <p style="color:var(--shop-text-mid);margin:0 0 2rem">
+        Your bag will sync across sessions and support promo codes before checkout. Hook this LiveView to your cart context when persistence is ready.
+      </p>
+      <.link navigate={~p"/shop/products"} class="btn-shop-primary">
+        <.icon name="hero-arrow-left" class="w-4 h-4" /> Continue Shopping
+      </.link>
+    </div>
   </div>
 </div>

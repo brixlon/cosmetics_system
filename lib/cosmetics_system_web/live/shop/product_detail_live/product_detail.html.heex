@@ -1,4 +1,5 @@
-<div class="product-detail">
+<div class="shop-wrapper">
+  <div class="product-detail">
   <div class="product-gallery">
     <%= if @active_image do %>
       <img src={@active_image.url} alt={@product.name} class="gallery__main" />
@@ -25,6 +26,7 @@
         <label>Choose shade / size:</label>
         <div class="variant-options">
           <button
+            type="button"
             :for={v <- @product.variants}
             phx-click="select_variant"
             phx-value-id={v.id}
@@ -44,15 +46,16 @@
     <% end %>
 
     <div class="quantity-selector">
-      <button phx-click="set_quantity" phx-value-qty={max(1, @quantity - 1)}>−</button>
+      <button type="button" phx-click="set_quantity" phx-value-qty={max(1, @quantity - 1)}>−</button>
       <span>{@quantity}</span>
-      <button phx-click="set_quantity" phx-value-qty={@quantity + 1}>+</button>
+      <button type="button" phx-click="set_quantity" phx-value-qty={@quantity + 1}>+</button>
     </div>
 
     <button
+      type="button"
       phx-click="add_to_cart"
       id="btn-add-to-cart"
-      class="btn btn--primary btn--lg btn--full"
+      class="btn-add-to-cart"
       disabled={is_nil(@selected_variant) || @selected_variant.stock_quantity == 0}
     >
       Add to Cart
@@ -77,4 +80,5 @@
       <% end %>
     </div>
   </div>
+</div>
 </div>

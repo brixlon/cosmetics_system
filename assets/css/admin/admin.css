@@ -11,33 +11,7 @@
 .kpi-card--red    { --kpi-accent: #A32D2D; --kpi-bg: #FCEBEB; --kpi-trend: #A32D2D; }
 .kpi-card--teal   { --kpi-accent: #0F6E56; --kpi-bg: #E1F5EE; --kpi-trend: #0F6E56; }
 
-/* ---- Layout ------------------------------------------------ */
-.admin-dashboard {
-  padding: 1.5rem 2rem 3rem;
-  max-width: 1200px;
-}
-
-.dashboard-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 1.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.dashboard-title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-  margin: 0 0 2px;
-}
-
-.dashboard-subtitle {
-  font-size: 0.8125rem;
-  color: #6b7280;
-  margin: 0;
-}
+/* ---- Layout (shell + titles: admin-refined.css) ---------- */
 
 /* Live indicator */
 .live-badge {
@@ -324,48 +298,7 @@
   min-width: 52px;
 }
 
-/* ---- Admin page shells -------------------------------- */
-.admin-page {
-  padding: 1.5rem 2rem 3rem;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.admin-page--wide {
-  max-width: 1200px;
-}
-
-.admin-page-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.25rem;
-  color: #111827;
-}
-
-.admin-eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #6b7280;
-  margin: 0 0 0.5rem;
-}
-
-.admin-lead {
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: #4b5563;
-  margin: 0;
-}
-
-.admin-hero-card {
-  border-radius: 1rem;
-  border: 1px solid #e5e7eb;
-  background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, #f9fafb 100%);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  padding: 2rem 2.25rem;
-}
+/* ---- Admin page shells (see admin-refined.css) ------------ */
 
 .product-modal-form {
   padding: 0.5rem 0.25rem;

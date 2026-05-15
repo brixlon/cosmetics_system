@@ -35,38 +35,119 @@ defmodule CosmeticsSystemWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="navbar px-4 sm:px-6 lg:px-8">
-      <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
-        </a>
-      </div>
-      <div class="flex-none">
-        <ul class="flex flex-column px-1 space-x-4 items-center">
-          <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
-          </li>
-          <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
-          </li>
-          <li>
-            <.theme_toggle />
-          </li>
-          <li>
-            <a href="https://hexdocs.pm/phoenix/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </header>
+    <div class="admin-shell">
+      <%# ── Sidebar ─────────────────────────────────────── %>
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar__brand">
+          <div class="admin-sidebar__logo">
+            <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="7" cy="7" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+          <div>
+            <span class="admin-sidebar__brand-name"><span>Luminae</span> Admin</span>
+          </div>
+        </div>
 
-    <main class="px-4 py-20 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl space-y-4">
-        {render_slot(@inner_block)}
+        <div class="admin-sidebar__section">
+          <p class="admin-sidebar__section-label">Overview</p>
+          <ul class="admin-sidebar__nav">
+            <li>
+              <.link navigate={~p"/admin"} class="admin-sidebar__link">
+                <.icon name="hero-chart-bar-square" class="admin-sidebar__link-icon" />
+                Dashboard
+              </.link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="admin-sidebar__section">
+          <p class="admin-sidebar__section-label">Commerce</p>
+          <ul class="admin-sidebar__nav">
+            <li>
+              <.link navigate={~p"/admin/orders"} class="admin-sidebar__link">
+                <.icon name="hero-shopping-bag" class="admin-sidebar__link-icon" />
+                Orders
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/admin/products"} class="admin-sidebar__link">
+                <.icon name="hero-squares-2x2" class="admin-sidebar__link-icon" />
+                Products
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/admin/customers"} class="admin-sidebar__link">
+                <.icon name="hero-users" class="admin-sidebar__link-icon" />
+                Customers
+              </.link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="admin-sidebar__section">
+          <p class="admin-sidebar__section-label">Operations</p>
+          <ul class="admin-sidebar__nav">
+            <li>
+              <.link navigate={~p"/admin/suppliers"} class="admin-sidebar__link">
+                <.icon name="hero-truck" class="admin-sidebar__link-icon" />
+                Suppliers
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/admin/purchase-orders"} class="admin-sidebar__link">
+                <.icon name="hero-document-text" class="admin-sidebar__link-icon" />
+                Purchase Orders
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/admin/employees"} class="admin-sidebar__link">
+                <.icon name="hero-identification" class="admin-sidebar__link-icon" />
+                Employees
+              </.link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="admin-sidebar__footer">
+          <a href="#" class="admin-sidebar__user">
+            <div class="admin-sidebar__avatar">A</div>
+            <div>
+              <p class="admin-sidebar__user-name">Admin</p>
+              <p class="admin-sidebar__user-role">Administrator</p>
+            </div>
+          </a>
+        </div>
+      </aside>
+
+      <%# ── Main ────────────────────────────────────────── %>
+      <div class="admin-main">
+        <header class="admin-topbar">
+          <div class="admin-topbar__search">
+            <svg class="admin-topbar__search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="search" placeholder="Search…" />
+          </div>
+          <div class="admin-topbar__actions">
+            <.link navigate={~p"/shop"} class="admin-topbar__icon-btn" title="View shop">
+              <.icon name="hero-arrow-top-right-on-square" class="w-4 h-4" />
+            </.link>
+            <button type="button" class="admin-topbar__icon-btn" title="Notifications">
+              <.icon name="hero-bell" class="w-4 h-4" />
+              <span class="admin-topbar__notif-dot"></span>
+            </button>
+            <Layouts.theme_toggle />
+          </div>
+        </header>
+
+        <main class="admin-content">
+          {render_slot(@inner_block)}
+        </main>
       </div>
-    </main>
+    </div>
 
     <.flash_group flash={@flash} />
     """
@@ -126,6 +207,7 @@ defmodule CosmeticsSystemWeb.Layouts do
       <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
 
       <button
+        type="button"
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="system"
@@ -134,6 +216,7 @@ defmodule CosmeticsSystemWeb.Layouts do
       </button>
 
       <button
+        type="button"
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="light"
@@ -142,6 +225,7 @@ defmodule CosmeticsSystemWeb.Layouts do
       </button>
 
       <button
+        type="button"
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="dark"

@@ -1,12 +1,14 @@
-<div class="admin-page">
-  <div class="admin-hero-card">
-    <p class="admin-eyebrow">Customer</p>
-    <h1 class="admin-page-title">{["Profile #", @customer_id]}</h1>
-    <p class="admin-lead">
-      Orders, notes, and contact history will show here once the detail API is connected.
-    </p>
-    <.link navigate={~p"/admin/customers"} class="btn btn--ghost mt-4">
-      <.icon name="hero-arrow-left" class="w-4 h-4" /> All customers
-    </.link>
+<Layouts.app flash={@flash}>
+  <div class="admin-page">
+    <div class="admin-hero-card">
+      <p class="admin-eyebrow">Customer</p>
+      <h1 class="admin-page-title">{["Profile #", @customer_id]}</h1>
+      <p class="admin-lead">
+        Orders, notes, and contact history will show here once the detail API is connected.
+      </p>
+      <.link navigate={~p"/admin/customers"} class="btn btn--ghost mt-4">
+        <.icon name="hero-arrow-left" class="w-4 h-4" /> All customers
+      </.link>
+    </div>
   </div>
-</div>
+</Layouts.app>

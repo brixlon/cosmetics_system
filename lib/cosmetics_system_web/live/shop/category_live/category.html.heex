@@ -1,4 +1,5 @@
-<div class="shop-page">
+<div class="shop-wrapper">
+  <div class="shop-page">
   <%= if assigns[:category] do %>
     <header class="shop-page-header">
       <h1 class="shop-page-title">{@category.name}</h1>
@@ -15,4 +16,5 @@
       <p class="text-base-content/70">Loading category…</p>
     </div>
   <% end %>
+  </div>
 </div>

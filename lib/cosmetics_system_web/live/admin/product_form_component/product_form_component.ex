@@ -4,9 +4,6 @@ defmodule CosmeticsSystemWeb.Admin.ProductFormComponent do
   embed_templates("*")
 
   @impl true
-  def render(assigns), do: product_form_component(assigns)
-
-  @impl true
   def update(%{id: id, product: product, changeset: changeset, categories: categories}, socket) do
     {:ok,
      socket

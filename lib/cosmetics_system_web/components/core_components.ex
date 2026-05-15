@@ -115,6 +115,10 @@ defmodule CosmeticsSystemWeb.CoreComponents do
       </.link>
       """
     else
+      rest = Map.put_new(rest, :type, "button")
+
+      assigns = assign(assigns, :rest, rest)
+
       ~H"""
       <button class={@class} {@rest}>
         {render_slot(@inner_block)}
@@ -396,15 +400,16 @@ defmodule CosmeticsSystemWeb.CoreComponents do
       end
 
     ~H"""
-    <table class="table table-zebra">
-      <thead>
-        <tr>
-          <th :for={col <- @col}>{col[:label]}</th>
-          <th :if={@action != []}>
-            <span class="sr-only">{gettext("Actions")}</span>
-          </th>
-        </tr>
-      </thead>
+    <div class="admin-table-wrap overflow-x-auto">
+      <table class="cs-admin-table">
+        <thead>
+          <tr>
+            <th :for={col <- @col}>{col[:label]}</th>
+            <th :if={@action != []}>
+              <span class="sr-only">{gettext("Actions")}</span>
+            </th>
+          </tr>
+        </thead>
       <tbody id={@id} phx-update={is_struct(@rows, Phoenix.LiveView.LiveStream) && "stream"}>
         <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
           <td
@@ -423,7 +428,8 @@ defmodule CosmeticsSystemWeb.CoreComponents do
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
+    </div>
     """
   end
 
