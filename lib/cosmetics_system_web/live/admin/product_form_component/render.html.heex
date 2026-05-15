@@ -1,17 +1,149 @@
-<div class="product-modal-form">
-  <h2 class="modal-title" id="product-form-title">{form_title(@product)}</h2>
-  <.form for={@form} id="product-form" phx-submit="save" class="space-y-4">
-    <.input field={@form[:name]} type="text" label="Name" required />
-    <.input field={@form[:sku]} type="text" label="SKU" required />
-    <.input field={@form[:base_price]} type="number" label="Base price (KES)" step="any" required />
-    <.input field={@form[:description]} type="textarea" label="Description" />
-    <.input
-      field={@form[:category_id]}
-      type="select"
-      label="Category"
-      options={@category_options}
-      prompt="Select category"
-    />
+<div class="admin-resource-form">
+  <div class="modal-header">
+    <div class="modal-header-icon">
+      <.icon name="hero-cube" />
+    </div>
+    <div>
+      <h2 class="modal-title" id="product-form-title">{form_title(@product)}</h2>
+      <%= if @product.id do %>
+        <p class="modal-subtitle">
+          {@product.name}
+          <span class="meta-badge">{@product.sku}</span>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <.form
+    for={@form}
+    id="product-form"
+    phx-submit="save"
+    phx-change="validate"
+    multipart
+  >
+    <div class="form-body">
+
+      <%!-- Basic info --%>
+      <section class="form-section">
+        <p class="section-label">Basic info</p>
+        <div class="grid-2">
+          <.input field={@form[:name]} type="text" label="Name" required />
+          <.input field={@form[:sku]} type="text" label="SKU" required />
+        </div>
+        <.input
+          field={@form[:category_id]}
+          type="select"
+          label="Category"
+          options={@category_options}
+          prompt="Select category"
+        />
+      </section>
+
+      <hr class="form-divider" />
+
+      <%!-- Images --%>
+      <section class="form-section">
+        <p class="section-label">Image</p>
+
+        <%= if url = current_image_url(assigns) do %>
+          <div class="product-image-preview">
+            <img src={url} alt={current_image_alt(assigns)} />
+            <%= if @primary_image && @primary_image.is_primary do %>
+              <span class="meta-badge">Primary</span>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="product-image-upload">
+          <.live_file_input upload={@uploads.product_image} class="product-image-file-input" />
+          <p class="toggle-desc">JPG, PNG, WebP, or GIF — max 5 MB</p>
+        </div>
+
+        <%= for entry <- @uploads.product_image.entries do %>
+          <div class="product-image-entry">
+            <.live_img_preview entry={entry} class="product-image-preview-thumb" />
+            <button
+              type="button"
+              phx-click="cancel_upload"
+              phx-value-ref={entry.ref}
+              class="btn btn--ghost"
+            >
+              Remove
+            </button>
+          </div>
+        <% end %>
+
+        <%= for err <- @uploads.product_image.errors do %>
+          <p class="product-image-error">{product_upload_error_to_string(err)}</p>
+        <% end %>
+
+        <%= for entry <- @uploads.product_image.entries, err <- entry.errors do %>
+          <p class="product-image-error">{product_upload_error_to_string(err)}</p>
+        <% end %>
+
+        <.input
+          name="image_url"
+          type="text"
+          label="Or image URL"
+          value={current_image_url(assigns) || ""}
+          placeholder="https://…"
+        />
+        <.input
+          name="image_alt"
+          type="text"
+          label="Alt text"
+          value={current_image_alt(assigns) || ""}
+          placeholder="Describe the product photo"
+        />
+      </section>
+
+      <hr class="form-divider" />
+
+      <%!-- Pricing --%>
+      <section class="form-section">
+        <p class="section-label">Pricing (KES)</p>
+        <div class="grid-3">
+          <.input field={@form[:base_price]} type="number" label="Base price" step="any" required />
+          <.input field={@form[:compare_at_price]} type="number" label="Compare-at price" step="any" />
+          <.input field={@form[:cost_price]} type="number" label="Cost price" step="any" />
+        </div>
+      </section>
+
+      <hr class="form-divider" />
+
+      <%!-- Product details --%>
+      <section class="form-section">
+        <p class="section-label">Product details</p>
+        <.input field={@form[:description]} type="textarea" label="Description" />
+        <.input field={@form[:ingredients]} type="textarea" label="Ingredients" />
+        <.input field={@form[:how_to_use]} type="textarea" label="How to use" />
+      </section>
+
+      <hr class="form-divider" />
+
+      <%!-- Visibility --%>
+      <section class="form-section">
+        <p class="section-label">Visibility</p>
+        <div class="toggle-row">
+          <label class="toggle-item">
+            <.input field={@form[:active]} type="checkbox" label="" />
+            <div>
+              <p class="toggle-label">Active</p>
+              <p class="toggle-desc">Visible in the storefront</p>
+            </div>
+          </label>
+          <label class="toggle-item">
+            <.input field={@form[:featured]} type="checkbox" label="" />
+            <div>
+              <p class="toggle-label">Featured</p>
+              <p class="toggle-desc">Shown on homepage highlights</p>
+            </div>
+          </label>
+        </div>
+      </section>
+
+    </div>
+
     <div class="modal-actions">
       <.link patch={~p"/admin/products"} class="btn btn--ghost">Cancel</.link>
       <button type="submit" class="btn btn--primary" id="product-form-submit">

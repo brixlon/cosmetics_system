@@ -13,6 +13,7 @@ defmodule CosmeticsSystem.HR do
       if dept = opts[:department], do: where(q, [e], e.department == ^dept), else: q
     end)
     |> order_by([e], asc: e.last_name)
+    |> preload(:user)
     |> Repo.all()
   end
 
@@ -29,6 +30,9 @@ defmodule CosmeticsSystem.HR do
     |> Employee.changeset(attrs)
     |> Repo.update()
   end
+
+  def change_employee(%Employee{} = employee, attrs \\ %{}),
+    do: Employee.changeset(employee, attrs)
 
   def terminate_employee(%Employee{} = employee) do
     employee

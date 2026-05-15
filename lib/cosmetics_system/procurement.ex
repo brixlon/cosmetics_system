@@ -21,6 +21,21 @@ defmodule CosmeticsSystem.Procurement do
   def update_supplier(%Supplier{} = supplier, attrs),
     do: supplier |> Supplier.changeset(attrs) |> Repo.update()
 
+  def change_supplier(%Supplier{} = supplier, attrs \\ %{}),
+    do: Supplier.changeset(supplier, attrs)
+
+  def change_purchase_order(%PurchaseOrder{} = po, attrs \\ %{}),
+    do: PurchaseOrder.changeset(po, attrs)
+
+  def update_purchase_order(%PurchaseOrder{} = po, attrs),
+    do: po |> PurchaseOrder.changeset(attrs) |> Repo.update()
+
+  def create_purchase_order_header(attrs) do
+    %PurchaseOrder{}
+    |> PurchaseOrder.changeset(attrs)
+    |> Repo.insert()
+  end
+
   # ── Purchase Orders ─────────────────────────────────────────────────
 
   def list_purchase_orders(opts \\ []) do

@@ -4,6 +4,8 @@
 @import "tailwindcss" source(none);
 @import "./admin/admin.css";
 @import "./shop.css";
+@import "./admin_form.css";
+@import "./admin_detail.css";
 @source "../css";
 @source "../js";
 @source "../../lib/cosmetics_system_web";

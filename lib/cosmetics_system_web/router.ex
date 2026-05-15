@@ -37,11 +37,22 @@ defmodule CosmeticsSystemWeb.Router do
     live "/products/:id/edit", ProductsLive, :edit
     live "/orders", OrdersLive, :index
     live "/orders/:id", OrderDetailLive, :show
+    live "/users", UsersLive, :index
+    live "/users/new", UsersLive, :new
+    live "/users/:id/edit", UsersLive, :edit
     live "/customers", CustomersLive, :index
+    live "/customers/new", CustomersLive, :new
+    live "/customers/:id/edit", CustomersLive, :edit
     live "/customers/:id", CustomerDetailLive, :show
     live "/employees", EmployeesLive, :index
+    live "/employees/new", EmployeesLive, :new
+    live "/employees/:id/edit", EmployeesLive, :edit
     live "/suppliers", SuppliersLive, :index
+    live "/suppliers/new", SuppliersLive, :new
+    live "/suppliers/:id/edit", SuppliersLive, :edit
     live "/purchase-orders", PurchaseOrdersLive, :index
+    live "/purchase-orders/new", PurchaseOrdersLive, :new
+    live "/purchase-orders/:id/edit", PurchaseOrdersLive, :edit
   end
 
   scope "/shop", CosmeticsSystemWeb.Shop, as: :shop do

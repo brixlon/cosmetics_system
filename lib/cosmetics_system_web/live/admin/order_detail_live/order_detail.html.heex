@@ -1,14 +1,156 @@
 <Layouts.app flash={@flash}>
-  <div class="admin-page">
-    <div class="admin-hero-card">
-      <p class="admin-eyebrow">Order</p>
-      <h1 class="admin-page-title">{["Order #", @order_id]}</h1>
-      <p class="admin-lead">
-        Line items, payments, and fulfilment tools will appear here. For now this route is wired so the rest of the admin flow can grow around it.
-      </p>
-      <.link navigate={~p"/admin/orders"} class="btn btn--ghost mt-4">
-        <.icon name="hero-arrow-left" class="w-4 h-4" /> Back to orders
-      </.link>
+  <div class="admin-page admin-page--wide">
+    <nav class="admin-breadcrumb" aria-label="Breadcrumb">
+      <.link navigate={~p"/admin/orders"}>Orders</.link>
+      <span class="admin-breadcrumb__sep">/</span>
+      <span class="admin-breadcrumb__current">{@order.number}</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <h1 class="admin-page-title">Order {@order.number}</h1>
+        <p class="dashboard-subtitle">
+          <span class={"status-badge status-badge--#{@order.status}"}>{@order.status}</span>
+          ·
+          <span class={"badge #{payment_badge(@order.payment_status)}"}>{@order.payment_status}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="admin-detail">
+      <section class="detail-section">
+        <h2 class="detail-section-title">Summary</h2>
+        <div class="detail-grid detail-grid--3">
+          <div class="detail-field">
+            <span class="detail-label">Order number</span>
+            <p class="detail-value detail-value--mono">{@order.number}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Status</span>
+            <p class="detail-value">{@order.status}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Payment</span>
+            <p class="detail-value">{@order.payment_status}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Customer</h2>
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="detail-label">Name</span>
+            <p class="detail-value">
+              <.link navigate={~p"/admin/customers/#{@order.customer.id}"}>
+                {@order.customer.first_name} {@order.customer.last_name}
+              </.link>
+            </p>
+          </div>
+          <%= if @order.shipping_address do %>
+            <div class="detail-field">
+              <span class="detail-label">Ship to</span>
+              <p class="detail-value">
+                {@order.shipping_address.line1}, {@order.shipping_address.city}
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Totals (KES)</h2>
+        <div class="detail-grid detail-grid--3">
+          <div class="detail-field">
+            <span class="detail-label">Subtotal</span>
+            <p class="detail-value">{@order.subtotal}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Discount</span>
+            <p class="detail-value">{@order.discount_amount}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Tax</span>
+            <p class="detail-value">{@order.tax_amount}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Shipping</span>
+            <p class="detail-value">{@order.shipping_fee}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Total</span>
+            <p class="detail-value"><strong>{@order.total}</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Fulfillment</h2>
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="detail-label">Shipped at</span>
+            <p class="detail-value">{format_datetime(@order.shipped_at)}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Delivered at</span>
+            <p class="detail-value">{format_datetime(@order.delivered_at)}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Notes</span>
+            <p class="detail-value detail-value--muted">{@order.notes || "—"}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Line items</h2>
+        <div class="admin-table-wrap">
+          <table class="cs-admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Variant</th>
+                <th>Qty</th>
+                <th>Unit price</th>
+                <th>Line total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr :for={item <- @order.items}>
+                <td>{item.product_name}</td>
+                <td>{item.variant_name || "—"}</td>
+                <td>{item.quantity}</td>
+                <td>KES {item.unit_price}</td>
+                <td>KES {item.line_total}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <%= if @order.payments != [] do %>
+        <section class="detail-section">
+          <h2 class="detail-section-title">Payments</h2>
+          <div class="admin-table-wrap">
+            <table class="cs-admin-table">
+              <thead>
+                <tr>
+                  <th>Provider</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr :for={payment <- @order.payments}>
+                  <td>{payment.provider}</td>
+                  <td>KES {payment.amount}</td>
+                  <td>{payment.status}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      <% end %>
     </div>
   </div>
 </Layouts.app>

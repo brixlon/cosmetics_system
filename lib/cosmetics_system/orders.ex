@@ -108,6 +108,14 @@ defmodule CosmeticsSystem.Orders do
     end)
   end
 
+  def change_order(%Order{} = order, attrs \\ %{}), do: Order.changeset(order, attrs)
+
+  def update_order(%Order{} = order, attrs) do
+    order
+    |> Order.changeset(attrs)
+    |> Repo.update()
+  end
+
   def update_order_status(%Order{} = order, status) do
     order
     |> Order.changeset(%{status: status})

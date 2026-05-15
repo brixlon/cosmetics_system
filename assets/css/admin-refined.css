@@ -649,16 +649,16 @@
 
 /* ── Admin Form overrides ──────────────────────────────── */
 .admin-page .fieldset,
-.product-modal-form .fieldset {
+.admin-resource-form .fieldset {
   margin-bottom: 0;
 }
 
 .admin-page .input,
 .admin-page .select,
 .admin-page .textarea,
-.product-modal-form .input,
-.product-modal-form .select,
-.product-modal-form .textarea {
+.admin-resource-form .input,
+.admin-resource-form .select,
+.admin-resource-form .textarea {
   font-family: var(--admin-font);
 }
 
@@ -685,6 +685,13 @@
   letter-spacing: -.02em;
   color: var(--admin-text);
   margin: 0 0 .4rem;
+}
+
+.page-header__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
 }
 
 .admin-lead {

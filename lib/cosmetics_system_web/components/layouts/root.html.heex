@@ -1,13 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title default="CosmeticsSystem" suffix=" · Phoenix Framework" phx-no-format>{assigns[:page_title]}</.live_title>
+    <meta name="description" content={assigns[:page_description] || "CosmeticsSystem — manage your products, orders and customers"} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1e1e2e" media="(prefers-color-scheme: dark)" />
+
+    <%!-- Open Graph --%>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={assigns[:page_title] || "CosmeticsSystem"} />
+    <meta property="og:description" content={assigns[:page_description] || "CosmeticsSystem admin"} />
+
+    <.live_title default="CosmeticsSystem" suffix=" · CosmeticsSystem" phx-no-format>
+      {assigns[:page_title]}
+    </.live_title>
+
+    <%!-- Favicon --%>
+    <link rel="icon" type="image/svg+xml" href={~p"/favicon.ico"} />
+
+    <%!-- Google Fonts: Geist for UI, Geist Mono for code --%>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
+
+    <%!-- Theme bootstrap: runs before paint to avoid flash --%>
     <script>
       (() => {
         const setTheme = (theme) => {
@@ -19,16 +44,56 @@
             document.documentElement.setAttribute("data-theme", theme);
           }
         };
+
+        // Default to "light" — never inherit OS dark mode automatically
         if (!document.documentElement.hasAttribute("data-theme")) {
-          setTheme(localStorage.getItem("phx:theme") || "system");
+          setTheme(localStorage.getItem("phx:theme") || "light");
         }
-        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
-        
+
+        // Sync across tabs
+        window.addEventListener("storage", (e) => {
+          if (e.key === "phx:theme") setTheme(e.newValue || "light");
+        });
+
+        // LiveView theme event (e.g. from a theme toggle component)
         window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
       })();
     </script>
+
+    <%!-- Page transition progress bar style --%>
+    <style>
+      #nprogress .bar {
+        background: oklch(70% 0.213 47.604);
+        height: 2px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+      }
+
+      body {
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      code, pre, .font-mono {
+        font-family: "Geist Mono", ui-monospace, monospace;
+      }
+
+      /* Smooth LiveView page transitions */
+      .phx-loading { cursor: wait; }
+      .phx-modal-appear {
+        animation: modal-in 180ms ease-out both;
+      }
+      @keyframes modal-in {
+        from { opacity: 0; transform: translateY(6px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+    </style>
   </head>
-  <body>
+
+  <body class="min-h-screen bg-base-200 text-base-content antialiased">
     {@inner_content}
   </body>
 </html>

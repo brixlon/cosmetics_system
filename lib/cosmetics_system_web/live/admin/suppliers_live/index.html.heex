@@ -1,11 +1,53 @@
 <Layouts.app flash={@flash}>
-  <div class="admin-page">
-    <div class="admin-hero-card">
-      <p class="admin-eyebrow">Procurement</p>
+  <div class="admin-page admin-page--wide">
+    <div class="page-header">
       <h1 class="admin-page-title">Suppliers</h1>
-      <p class="admin-lead">
-        Vendor contacts, terms, and rating will appear in a sortable directory on this page.
-      </p>
+      <.link patch={~p"/admin/suppliers/new"} class="btn btn--primary" id="btn-new-supplier">
+        <.icon name="hero-plus" /> New supplier
+      </.link>
     </div>
+
+    <div class="admin-filter-bar">
+      <button
+        type="button"
+        phx-click="toggle_active_filter"
+        class={"btn-filter #{if @active_only, do: "active"}"}
+      >
+        Active only
+      </button>
+    </div>
+
+    <.table id="suppliers" rows={@suppliers}>
+      <:col :let={s} label="Name">{s.name}</:col>
+      <:col :let={s} label="Contact">{s.contact_name || "—"}</:col>
+      <:col :let={s} label="Email">{s.email || "—"}</:col>
+      <:col :let={s} label="Phone">{s.phone || "—"}</:col>
+      <:col :let={s} label="Country">{s.country || "—"}</:col>
+      <:col :let={s} label="Terms">{s.payment_terms || "—"}</:col>
+      <:col :let={s} label="Status">
+        <button
+          type="button"
+          phx-click="toggle_active"
+          phx-value-id={s.id}
+          class={"badge badge--#{if s.active, do: "success", else: "neutral"}"}
+        >
+          {if s.active, do: "Active", else: "Inactive"}
+        </button>
+      </:col>
+      <:action :let={s}>
+        <.link patch={~p"/admin/suppliers/#{s.id}/edit"}>Edit</.link>
+      </:action>
+    </.table>
+
+    <%= if @live_action in [:new, :edit] do %>
+      <.modal id="supplier-modal" show on_cancel={JS.patch(~p"/admin/suppliers")}>
+        <.live_component
+          module={CosmeticsSystemWeb.Admin.SupplierFormComponent}
+          id={@supplier.id || :new}
+          supplier={@supplier}
+          changeset={@changeset}
+        />
+      </.modal>
+    <% end %>
   </div>
 </Layouts.app>

@@ -1,11 +1,50 @@
 <Layouts.app flash={@flash}>
-  <div class="admin-page">
-    <div class="admin-hero-card">
-      <p class="admin-eyebrow">Procurement</p>
+  <div class="admin-page admin-page--wide">
+    <div class="page-header">
       <h1 class="admin-page-title">Purchase orders</h1>
-      <p class="admin-lead">
-        Draft, approve, and receive POs from one timeline. Wire this view to `CosmeticsSystem.Procurement` when your workflow is defined.
-      </p>
+      <.link patch={~p"/admin/purchase-orders/new"} class="btn btn--primary" id="btn-new-po">
+        <.icon name="hero-plus" /> New PO
+      </.link>
     </div>
+
+    <div class="admin-filter-bar">
+      <div class="status-filters" id="po-status-filters">
+        <%= for status <- ["all" | ~w(draft ordered in_transit received cancelled)] do %>
+          <button
+            type="button"
+            phx-click="filter_status"
+            phx-value-status={if status == "all", do: "", else: status}
+            class={"btn-filter #{if status_filter_active?(@status_filter, status), do: "active"}"}
+          >
+            {String.capitalize(String.replace(status, "_", " "))}
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <.table id="purchase-orders" rows={@purchase_orders}>
+      <:col :let={po} label="Number"><code>{po.number}</code></:col>
+      <:col :let={po} label="Supplier">{po.supplier && po.supplier.name}</:col>
+      <:col :let={po} label="Status">{String.replace(po.status, "_", " ")}</:col>
+      <:col :let={po} label="Total">KES {po.total_amount || "—"}</:col>
+      <:col :let={po} label="Expected">{format_date(po.expected_delivery)}</:col>
+      <:col :let={po} label="Items">{length(po.items)}</:col>
+      <:action :let={po}>
+        <.link patch={~p"/admin/purchase-orders/#{po.id}/edit"}>Edit</.link>
+      </:action>
+    </.table>
+
+    <%= if @live_action in [:new, :edit] do %>
+      <.modal id="purchase-order-modal" show on_cancel={JS.patch(~p"/admin/purchase-orders")}>
+        <.live_component
+          module={CosmeticsSystemWeb.Admin.PurchaseOrderFormComponent}
+          id={@purchase_order.id || :new}
+          purchase_order={@purchase_order}
+          changeset={@changeset}
+          supplier_options={@supplier_options}
+          employee_options={@employee_options}
+        />
+      </.modal>
+    <% end %>
   </div>
 </Layouts.app>

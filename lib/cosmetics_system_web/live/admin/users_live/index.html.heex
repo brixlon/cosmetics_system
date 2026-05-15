@@ -1,0 +1,53 @@
+<Layouts.app flash={@flash}>
+  <div class="admin-page admin-page--wide">
+    <div class="page-header">
+      <h1 class="admin-page-title page-header__title">
+        <.icon name="hero-user-group" class="w-6 h-6 shrink-0" />
+        Accounts
+      </h1>
+      <.link patch={~p"/admin/users/new"} class="btn btn--primary" id="btn-new-user">
+        <.icon name="hero-plus" /> New account
+      </.link>
+    </div>
+
+    <div class="admin-filter-bar">
+      <div class="status-filters" id="user-role-filters">
+        <%= for role <- ["all", "customer", "staff", "admin"] do %>
+          <button
+            type="button"
+            phx-click="filter_role"
+            phx-value-role={if role == "all", do: "", else: role}
+            class={"btn-filter #{if role_filter_active?(@role_filter, role), do: "active"}"}
+          >
+            {String.capitalize(role)}
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <.table id="users" rows={@users}>
+      <:col :let={u} label="Email">{u.email}</:col>
+      <:col :let={u} label="Role">
+        <span class="meta-badge">{u.role}</span>
+      </:col>
+      <:col :let={u} label="Linked">{link_status(u)}</:col>
+      <:col :let={u} label="Confirmed">
+        {if u.confirmed_at, do: "Yes", else: "No"}
+      </:col>
+      <:action :let={u}>
+        <.link patch={~p"/admin/users/#{u.id}/edit"}>Edit</.link>
+      </:action>
+    </.table>
+
+    <%= if @live_action in [:new, :edit] do %>
+      <.modal id="user-modal" show on_cancel={JS.patch(~p"/admin/users")}>
+        <.live_component
+          module={CosmeticsSystemWeb.Admin.UserFormComponent}
+          id={@user.id || :new}
+          user={@user}
+          changeset={@changeset}
+        />
+      </.modal>
+    <% end %>
+  </div>
+</Layouts.app>

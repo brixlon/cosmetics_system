@@ -23,6 +23,7 @@ defmodule CosmeticsSystem.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password, :role])
+    |> update_change(:email, &String.downcase/1)
     |> validate_email(opts)
     |> validate_password(opts)
     |> validate_inclusion(:role, @roles)
@@ -66,10 +67,23 @@ defmodule CosmeticsSystem.Accounts.User do
   end
 
   defp validate_password(changeset, opts) do
-    changeset
-    |> validate_required([:password])
-    |> validate_length(:password, min: 8, max: 72)
-    |> maybe_hash_password(opts)
+    password = get_change(changeset, :password)
+
+    cond do
+      skip_password_validation?(password, opts) ->
+        changeset
+
+      true ->
+        changeset
+        |> validate_required([:password])
+        |> validate_length(:password, min: 8, max: 72)
+        |> maybe_hash_password(opts)
+    end
+  end
+
+  defp skip_password_validation?(password, opts) do
+    blank? = is_nil(password) or password == ""
+    blank? and Keyword.get(opts, :hash_password, true) == false
   end
 
   defp maybe_hash_password(changeset, opts) do

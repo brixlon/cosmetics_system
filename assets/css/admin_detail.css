@@ -1,0 +1,92 @@
+/* Schema-aligned read-only detail layouts */
+
+.admin-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-detail .detail-section {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 1.1rem 1.25rem;
+}
+
+.admin-detail .detail-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--admin-text-soft);
+  margin: 0 0 0.85rem;
+}
+
+.admin-detail .detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1.25rem;
+}
+
+.admin-detail .detail-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+  .admin-detail .detail-grid,
+  .admin-detail .detail-grid--3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-detail .detail-field {
+  min-width: 0;
+}
+
+.admin-detail .detail-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--admin-text-soft);
+  margin-bottom: 0.2rem;
+}
+
+.admin-detail .detail-value {
+  font-size: 0.875rem;
+  color: var(--admin-text);
+  margin: 0;
+  word-break: break-word;
+}
+
+.admin-detail .detail-value--mono {
+  font-family: var(--admin-mono);
+  font-size: 0.8125rem;
+}
+
+.admin-detail .detail-value--muted {
+  color: var(--admin-text-mid);
+}
+
+.admin-detail .detail-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-detail .meta-badge {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--admin-primary-light);
+  color: var(--admin-primary);
+  margin-left: 0.35rem;
+}
+
+.admin-detail .detail-address-card {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  background: var(--admin-bg);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}

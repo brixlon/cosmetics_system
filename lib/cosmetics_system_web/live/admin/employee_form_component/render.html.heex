@@ -1,0 +1,92 @@
+<div class="admin-resource-form">
+  <div class="modal-header">
+    <div class="modal-header-icon">
+      <.icon name="hero-identification" />
+    </div>
+    <div>
+      <h2 class="modal-title" id="employee-form-title">{form_title(@employee)}</h2>
+      <%= if @employee.id do %>
+        <p class="modal-subtitle">
+          {CosmeticsSystem.HR.Employee.full_name(@employee)}
+          <span class="meta-badge">{@employee.employee_number}</span>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <.form for={@form} id="employee-form" phx-submit="save">
+    <div class="form-body">
+      <section class="form-section">
+        <p class="section-label">Identity</p>
+        <div class="grid-2">
+          <.input field={@form[:first_name]} type="text" label="First name" required />
+          <.input field={@form[:last_name]} type="text" label="Last name" required />
+        </div>
+        <div class="grid-2">
+          <.input field={@form[:employee_number]} type="text" label="Employee number" />
+          <.input field={@form[:national_id]} type="text" label="National ID" />
+        </div>
+        <.input field={@form[:phone]} type="text" label="Phone" />
+        <.input
+          field={@form[:user_id]}
+          type="select"
+          label="Linked account"
+          options={@user_options}
+          prompt="Select account"
+        />
+        <%= if length(@user_options) <= 1 do %>
+          <p class="toggle-desc">
+            No staff or admin accounts available.
+            <.link navigate={~p"/admin/users/new"} class="btn-link">Create one</.link>
+            first.
+          </p>
+        <% end %>
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Role</p>
+        <div class="grid-2">
+          <.input
+            field={@form[:department]}
+            type="select"
+            label="Department"
+            options={@department_options}
+            required
+          />
+          <.input field={@form[:position]} type="text" label="Position" required />
+        </div>
+        <div class="grid-2">
+          <.input field={@form[:hired_on]} type="date" label="Hired on" required />
+          <.input field={@form[:terminated_on]} type="date" label="Terminated on" />
+        </div>
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Compensation</p>
+        <.input field={@form[:salary]} type="number" label="Salary (KES)" step="any" />
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Status</p>
+        <label class="toggle-item">
+          <.input field={@form[:active]} type="checkbox" label="" />
+          <div>
+            <p class="toggle-label">Active</p>
+            <p class="toggle-desc">Currently employed</p>
+          </div>
+        </label>
+      </section>
+    </div>
+
+    <div class="modal-actions">
+      <.link patch={~p"/admin/employees"} class="btn btn--ghost">Cancel</.link>
+      <button type="submit" class="btn btn--primary" id="employee-form-submit">Save employee</button>
+    </div>
+  </.form>
+</div>

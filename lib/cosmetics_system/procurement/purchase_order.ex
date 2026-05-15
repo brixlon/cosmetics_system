@@ -33,5 +33,19 @@ defmodule CosmeticsSystem.Procurement.PurchaseOrder do
       :notes
     ])
     |> validate_required([:supplier_id])
+    |> maybe_generate_number()
+  end
+
+  defp maybe_generate_number(changeset) do
+    if is_nil(get_field(changeset, :number)) do
+      suffix =
+        :os.system_time(:millisecond)
+        |> Integer.to_string(36)
+        |> String.upcase()
+
+      put_change(changeset, :number, "PO-#{suffix}")
+    else
+      changeset
+    end
   end
 end

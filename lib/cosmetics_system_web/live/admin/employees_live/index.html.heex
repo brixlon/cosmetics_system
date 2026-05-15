@@ -1,11 +1,53 @@
 <Layouts.app flash={@flash}>
-  <div class="admin-page">
-    <div class="admin-hero-card">
-      <p class="admin-eyebrow">HR</p>
+  <div class="admin-page admin-page--wide">
+    <div class="page-header">
       <h1 class="admin-page-title">Employees</h1>
-      <p class="admin-lead">
-        Rosters, roles, and leave balances will be managed from here. Connect your HR context queries when you are ready to go live.
-      </p>
+      <.link patch={~p"/admin/employees/new"} class="btn btn--primary" id="btn-new-employee">
+        <.icon name="hero-plus" /> New employee
+      </.link>
     </div>
+
+    <div class="admin-filter-bar">
+      <div class="status-filters" id="employee-department-filters">
+        <%= for dept <- ["all" | ~w(management sales warehouse marketing finance)] do %>
+          <button
+            type="button"
+            phx-click="filter_department"
+            phx-value-department={if dept == "all", do: "", else: dept}
+            class={"btn-filter #{if department_filter_active?(@department_filter, dept), do: "active"}"}
+          >
+            {String.capitalize(dept)}
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <.table id="employees" rows={@employees}>
+      <:col :let={e} label="Name">{e.first_name} {e.last_name}</:col>
+      <:col :let={e} label="Number"><code>{e.employee_number}</code></:col>
+      <:col :let={e} label="Department">{String.capitalize(e.department)}</:col>
+      <:col :let={e} label="Position">{e.position}</:col>
+      <:col :let={e} label="Hired">{format_date(e.hired_on)}</:col>
+      <:col :let={e} label="Status">
+        <span class={"badge badge--#{if e.active, do: "success", else: "neutral"}"}>
+          {if e.active, do: "Active", else: "Inactive"}
+        </span>
+      </:col>
+      <:action :let={e}>
+        <.link patch={~p"/admin/employees/#{e.id}/edit"}>Edit</.link>
+      </:action>
+    </.table>
+
+    <%= if @live_action in [:new, :edit] do %>
+      <.modal id="employee-modal" show on_cancel={JS.patch(~p"/admin/employees")}>
+        <.live_component
+          module={CosmeticsSystemWeb.Admin.EmployeeFormComponent}
+          id={@employee.id || :new}
+          employee={@employee}
+          changeset={@changeset}
+          user_options={@user_options}
+        />
+      </.modal>
+    <% end %>
   </div>
 </Layouts.app>

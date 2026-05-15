@@ -1,0 +1,46 @@
+<div class="admin-resource-form">
+  <div class="modal-header">
+    <div class="modal-header-icon">
+      <.icon name="hero-user-group" />
+    </div>
+    <div>
+      <h2 class="modal-title" id="user-form-title">{form_title(@user)}</h2>
+      <%= if @user.id do %>
+        <p class="modal-subtitle">
+          {@user.email}
+          <span class="meta-badge">{@user.role}</span>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <.form for={@form} id="user-form" phx-submit="save">
+    <div class="form-body">
+      <section class="form-section">
+        <p class="section-label">Account</p>
+        <.input field={@form[:email]} type="email" label="Email" required />
+        <.input
+          field={@form[:password]}
+          type="password"
+          label={if @user.id, do: "New password (optional)", else: "Password"}
+          required={is_nil(@user.id)}
+        />
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Access</p>
+        <.input field={@form[:role]} type="select" label="Role" options={@role_options} required />
+        <p class="toggle-desc">
+          Customer accounts link to CRM profiles. Staff and admin accounts link to employees.
+        </p>
+      </section>
+    </div>
+
+    <div class="modal-actions">
+      <.link patch={~p"/admin/users"} class="btn btn--ghost">Cancel</.link>
+      <button type="submit" class="btn btn--primary" id="user-form-submit">Save account</button>
+    </div>
+  </.form>
+</div>

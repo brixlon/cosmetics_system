@@ -7,7 +7,7 @@
     </.link>
   </div>
 
-  <div class="filters">
+  <div class="admin-filter-bar">
     <input
       type="search"
       id="product-search"
@@ -21,8 +21,8 @@
   <.table id="products" rows={@products}>
     <:col :let={p} label="Name">
       <div class="product-cell">
-        <%= if img = List.first(p.images) do %>
-          <img src={img.url} class="product-thumb" alt="" />
+        <%= if img = Catalog.primary_image(p) do %>
+          <img src={img.url} class="product-thumb" alt={img.alt_text || ""} />
         <% end %>
         <span>{p.name}</span>
       </div>
@@ -54,6 +54,10 @@
         product={@product}
         changeset={@changeset}
         categories={Catalog.list_categories()}
+        uploads={@uploads}
+        primary_image={@primary_image}
+        image_url={@image_url}
+        image_alt={@image_alt}
       />
     </.modal>
   <% end %>

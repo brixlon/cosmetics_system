@@ -1,0 +1,64 @@
+<div class="admin-resource-form">
+  <div class="modal-header">
+    <div class="modal-header-icon">
+      <.icon name="hero-truck" />
+    </div>
+    <div>
+      <h2 class="modal-title" id="supplier-form-title">{form_title(@supplier)}</h2>
+      <%= if @supplier.id do %>
+        <p class="modal-subtitle">{@supplier.name}</p>
+      <% end %>
+    </div>
+  </div>
+
+  <.form for={@form} id="supplier-form" phx-submit="save">
+    <div class="form-body">
+      <section class="form-section">
+        <p class="section-label">Company</p>
+        <.input field={@form[:name]} type="text" label="Name" required />
+        <div class="grid-2">
+          <.input field={@form[:contact_name]} type="text" label="Contact name" />
+          <.input field={@form[:country]} type="text" label="Country" />
+        </div>
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Contact</p>
+        <div class="grid-2">
+          <.input field={@form[:email]} type="email" label="Email" />
+          <.input field={@form[:phone]} type="text" label="Phone" />
+        </div>
+        <.input field={@form[:website]} type="text" label="Website" />
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Terms & location</p>
+        <.input field={@form[:address]} type="textarea" label="Address" />
+        <.input field={@form[:payment_terms]} type="text" label="Payment terms" />
+        <.input field={@form[:notes]} type="textarea" label="Notes" />
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Status</p>
+        <label class="toggle-item">
+          <.input field={@form[:active]} type="checkbox" label="" />
+          <div>
+            <p class="toggle-label">Active</p>
+            <p class="toggle-desc">Available for new purchase orders</p>
+          </div>
+        </label>
+      </section>
+    </div>
+
+    <div class="modal-actions">
+      <.link patch={~p"/admin/suppliers"} class="btn btn--ghost">Cancel</.link>
+      <button type="submit" class="btn btn--primary" id="supplier-form-submit">Save supplier</button>
+    </div>
+  </.form>
+</div>

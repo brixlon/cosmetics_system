@@ -1,14 +1,133 @@
 <Layouts.app flash={@flash}>
-  <div class="admin-page">
-    <div class="admin-hero-card">
-      <p class="admin-eyebrow">Customer</p>
-      <h1 class="admin-page-title">{["Profile #", @customer_id]}</h1>
-      <p class="admin-lead">
-        Orders, notes, and contact history will show here once the detail API is connected.
-      </p>
-      <.link navigate={~p"/admin/customers"} class="btn btn--ghost mt-4">
-        <.icon name="hero-arrow-left" class="w-4 h-4" /> All customers
+  <div class="admin-page admin-page--wide">
+    <nav class="admin-breadcrumb" aria-label="Breadcrumb">
+      <.link navigate={~p"/admin/customers"}>Customers</.link>
+      <span class="admin-breadcrumb__sep">/</span>
+      <span class="admin-breadcrumb__current">{Customer.full_name(@customer)}</span>
+    </nav>
+
+    <div class="page-header">
+      <div>
+        <h1 class="admin-page-title">{Customer.full_name(@customer)}</h1>
+        <p class="dashboard-subtitle">
+          <span class={"badge #{loyalty_badge(@customer.loyalty_tier)}"}>{@customer.loyalty_tier}</span>
+          · {@customer.loyalty_points} points
+        </p>
+      </div>
+      <.link navigate={~p"/admin/customers/#{@customer.id}/edit"} class="btn btn--primary">
+        Edit customer
       </.link>
+    </div>
+
+    <div class="admin-detail">
+      <section class="detail-section">
+        <h2 class="detail-section-title">Contact</h2>
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="detail-label">First name</span>
+            <p class="detail-value">{@customer.first_name}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Last name</span>
+            <p class="detail-value">{@customer.last_name}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Phone</span>
+            <p class="detail-value">{@customer.phone || "—"}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Date of birth</span>
+            <p class="detail-value">{format_date(@customer.date_of_birth)}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Account</span>
+            <p class="detail-value">{@customer.user && @customer.user.email}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Loyalty</h2>
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="detail-label">Tier</span>
+            <p class="detail-value">{@customer.loyalty_tier}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Points</span>
+            <p class="detail-value">{@customer.loyalty_points}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Preferences</h2>
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="detail-label">Marketing opt-in</span>
+            <p class="detail-value">{if @customer.opted_in_marketing, do: "Yes", else: "No"}</p>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Notes</span>
+            <p class="detail-value detail-value--muted">{@customer.notes || "—"}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Addresses</h2>
+        <%= if @customer.addresses == [] do %>
+          <p class="detail-value detail-value--muted">No addresses on file.</p>
+        <% else %>
+          <div class="detail-stack">
+            <div :for={addr <- @customer.addresses} class="detail-address-card">
+              <strong>{String.capitalize(addr.label)}</strong>
+              <%= if addr.is_default do %>
+                <span class="meta-badge">Default</span>
+              <% end %>
+              <br />
+              {addr.line1}
+              <%= if addr.line2 do %>
+                <br />{addr.line2}
+              <% end %>
+              <br />
+              {addr.city}, {addr.state} {addr.postal_code}
+              <br />
+              {addr.country}
+            </div>
+          </div>
+        <% end %>
+      </section>
+
+      <section class="detail-section">
+        <h2 class="detail-section-title">Orders</h2>
+        <%= if @customer.orders == [] do %>
+          <p class="detail-value detail-value--muted">No orders yet.</p>
+        <% else %>
+          <div class="admin-table-wrap">
+            <table class="cs-admin-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr :for={order <- @customer.orders}>
+                  <td>
+                    <.link navigate={~p"/admin/orders/#{order.id}"}>{order.number}</.link>
+                  </td>
+                  <td>KES {order.total}</td>
+                  <td>{order.status}</td>
+                  <td>{format_datetime(order.inserted_at)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+      </section>
     </div>
   </div>
 </Layouts.app>

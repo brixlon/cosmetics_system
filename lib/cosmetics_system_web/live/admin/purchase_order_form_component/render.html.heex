@@ -1,0 +1,65 @@
+<div class="admin-resource-form">
+  <div class="modal-header">
+    <div class="modal-header-icon">
+      <.icon name="hero-document-text" />
+    </div>
+    <div>
+      <h2 class="modal-title" id="purchase-order-form-title">{form_title(@purchase_order)}</h2>
+      <%= if @purchase_order.id do %>
+        <p class="modal-subtitle">
+          <span class="meta-badge">{@purchase_order.number}</span>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <.form for={@form} id="purchase-order-form" phx-submit="save">
+    <div class="form-body">
+      <section class="form-section">
+        <p class="section-label">Reference</p>
+        <.input field={@form[:number]} type="text" label="PO number" />
+        <div class="grid-2">
+          <.input
+            field={@form[:supplier_id]}
+            type="select"
+            label="Supplier"
+            options={@supplier_options}
+            required
+          />
+          <.input
+            field={@form[:employee_id]}
+            type="select"
+            label="Assigned to"
+            options={@employee_options}
+          />
+        </div>
+        <.input field={@form[:status]} type="select" label="Status" options={@status_options} />
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Delivery</p>
+        <div class="grid-2">
+          <.input field={@form[:expected_delivery]} type="date" label="Expected delivery" />
+          <.input field={@form[:received_at]} type="datetime-local" label="Received at" />
+        </div>
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Financial</p>
+        <.input field={@form[:total_amount]} type="number" label="Total amount (KES)" step="any" />
+        <.input field={@form[:notes]} type="textarea" label="Notes" />
+      </section>
+    </div>
+
+    <div class="modal-actions">
+      <.link patch={~p"/admin/purchase-orders"} class="btn btn--ghost">Cancel</.link>
+      <button type="submit" class="btn btn--primary" id="purchase-order-form-submit">
+        Save purchase order
+      </button>
+    </div>
+  </.form>
+</div>

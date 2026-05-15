@@ -1,0 +1,172 @@
+/* Shared admin resource forms — sections mirror Ecto schema groupings */
+
+.admin-resource-form .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  margin-bottom: 1.5rem;
+}
+
+.admin-resource-form .modal-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-resource-form .modal-subtitle {
+  font-size: 12px;
+  opacity: 0.6;
+  margin: 0;
+}
+
+.admin-resource-form .meta-badge {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  opacity: 0.7;
+}
+
+.admin-resource-form .form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-resource-form .form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-resource-form .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.admin-resource-form .form-divider {
+  border: none;
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  margin: 0;
+}
+
+.admin-resource-form .grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.admin-resource-form .grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .admin-resource-form .grid-2,
+  .admin-resource-form .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-resource-form .toggle-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-resource-form .toggle-item {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+  cursor: pointer;
+}
+
+.admin-resource-form .toggle-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.admin-resource-form .toggle-desc {
+  font-size: 11px;
+  opacity: 0.55;
+  margin: 0;
+}
+
+/* Product image upload */
+.admin-resource-form .product-image-preview {
+  position: relative;
+  display: inline-block;
+  max-width: 160px;
+}
+
+.admin-resource-form .product-image-preview img {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.admin-resource-form .product-image-preview .meta-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+}
+
+.admin-resource-form .product-image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-resource-form .product-image-file-input {
+  font-size: 0.8125rem;
+}
+
+.admin-resource-form .product-image-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-resource-form .product-image-preview-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.admin-resource-form .product-image-error {
+  font-size: 0.75rem;
+  color: #d92d20;
+  margin: 0;
+}
+
+.admin-resource-form .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  margin-top: 0.25rem;
+}

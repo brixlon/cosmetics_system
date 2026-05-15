@@ -63,6 +63,24 @@ defmodule CosmeticsSystemWeb.Layouts do
         </div>
 
         <div class="admin-sidebar__section">
+          <p class="admin-sidebar__section-label">People</p>
+          <ul class="admin-sidebar__nav">
+            <li>
+              <.link navigate={~p"/admin/users"} class="admin-sidebar__link">
+                <.icon name="hero-user-group" class="admin-sidebar__link-icon" />
+                Accounts
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/admin/employees"} class="admin-sidebar__link">
+                <.icon name="hero-identification" class="admin-sidebar__link-icon" />
+                Employees
+              </.link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="admin-sidebar__section">
           <p class="admin-sidebar__section-label">Commerce</p>
           <ul class="admin-sidebar__nav">
             <li>
@@ -99,12 +117,6 @@ defmodule CosmeticsSystemWeb.Layouts do
               <.link navigate={~p"/admin/purchase-orders"} class="admin-sidebar__link">
                 <.icon name="hero-document-text" class="admin-sidebar__link-icon" />
                 Purchase Orders
-              </.link>
-            </li>
-            <li>
-              <.link navigate={~p"/admin/employees"} class="admin-sidebar__link">
-                <.icon name="hero-identification" class="admin-sidebar__link-icon" />
-                Employees
               </.link>
             </li>
           </ul>

@@ -1,11 +1,67 @@
 <Layouts.app flash={@flash}>
-  <div class="admin-page">
-    <div class="admin-hero-card">
-      <p class="admin-eyebrow">CRM</p>
+  <div class="admin-page admin-page--wide">
+    <div class="page-header">
       <h1 class="admin-page-title">Customers</h1>
-      <p class="admin-lead">
-        Search, segments, and lifetime value will live on this screen. The data layer is ready to plug in when you prioritise CRM work.
-      </p>
+      <.link patch={~p"/admin/customers/new"} class="btn btn--primary" id="btn-new-customer">
+        <.icon name="hero-plus" /> New customer
+      </.link>
     </div>
+
+    <div class="admin-filter-bar">
+      <input
+        type="search"
+        id="customer-search"
+        placeholder="Search customers…"
+        phx-keyup="search"
+        phx-debounce="300"
+        value={@search}
+      />
+      <div class="status-filters" id="customer-tier-filters">
+        <%= for tier <- ["all" | ~w(bronze silver gold platinum)] do %>
+          <button
+            type="button"
+            phx-click="filter_tier"
+            phx-value-tier={if tier == "all", do: "", else: tier}
+            class={"btn-filter #{if tier_filter_active?(@tier_filter, tier), do: "active"}"}
+          >
+            {String.capitalize(tier)}
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <.table id="customers" rows={@customers}>
+      <:col :let={c} label="Name">
+        <.link navigate={~p"/admin/customers/#{c.id}"}>
+          {c.first_name} {c.last_name}
+        </.link>
+      </:col>
+      <:col :let={c} label="Account">{c.user && c.user.email}</:col>
+      <:col :let={c} label="Phone">{c.phone || "—"}</:col>
+      <:col :let={c} label="Tier">
+        <span class={"badge #{loyalty_badge(c.loyalty_tier)}"}>
+          {c.loyalty_tier}
+        </span>
+      </:col>
+      <:col :let={c} label="Points">{c.loyalty_points}</:col>
+      <:col :let={c} label="Marketing">
+        {if c.opted_in_marketing, do: "Yes", else: "No"}
+      </:col>
+      <:action :let={c}>
+        <.link patch={~p"/admin/customers/#{c.id}/edit"}>Edit</.link>
+      </:action>
+    </.table>
+
+    <%= if @live_action in [:new, :edit] do %>
+      <.modal id="customer-modal" show on_cancel={JS.patch(~p"/admin/customers")}>
+        <.live_component
+          module={CosmeticsSystemWeb.Admin.CustomerFormComponent}
+          id={@customer.id || :new}
+          customer={@customer}
+          changeset={@changeset}
+          user_options={@user_options}
+        />
+      </.modal>
+    <% end %>
   </div>
 </Layouts.app>

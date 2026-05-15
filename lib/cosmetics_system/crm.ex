@@ -5,11 +5,13 @@ defmodule CosmeticsSystem.CRM do
   import Ecto.Query, warn: false
   alias CosmeticsSystem.Repo
   alias CosmeticsSystem.CRM.{Customer, Address}
+  alias CosmeticsSystem.Orders.Order
 
   def list_customers(opts \\ []) do
     Customer
     |> apply_customer_filters(opts)
     |> order_by([c], desc: c.inserted_at)
+    |> preload(:user)
     |> Repo.all()
   end
 
@@ -28,6 +30,14 @@ defmodule CosmeticsSystem.CRM do
     customer
     |> Customer.changeset(attrs)
     |> Repo.update()
+  end
+
+  def change_customer(%Customer{} = customer, attrs \\ %{}),
+    do: Customer.changeset(customer, attrs)
+
+  def get_customer_with_orders!(id) do
+    Repo.get!(Customer, id)
+    |> Repo.preload([:user, :addresses, orders: from(o in Order, order_by: [desc: o.inserted_at])])
   end
 
   def award_loyalty_points(%Customer{} = customer, points) do

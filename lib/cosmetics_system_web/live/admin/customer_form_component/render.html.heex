@@ -1,0 +1,76 @@
+<div class="admin-resource-form">
+  <div class="modal-header">
+    <div class="modal-header-icon">
+      <.icon name="hero-user" />
+    </div>
+    <div>
+      <h2 class="modal-title" id="customer-form-title">{form_title(@customer)}</h2>
+      <%= if @customer.id do %>
+        <p class="modal-subtitle">
+          {CosmeticsSystem.CRM.Customer.full_name(@customer)}
+          <span class="meta-badge">{@customer.loyalty_tier}</span>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <.form for={@form} id="customer-form" phx-submit="save">
+    <div class="form-body">
+      <section class="form-section">
+        <p class="section-label">Contact</p>
+        <div class="grid-2">
+          <.input field={@form[:first_name]} type="text" label="First name" required />
+          <.input field={@form[:last_name]} type="text" label="Last name" required />
+        </div>
+        <div class="grid-2">
+          <.input field={@form[:phone]} type="text" label="Phone" />
+          <.input field={@form[:date_of_birth]} type="date" label="Date of birth" />
+        </div>
+        <.input
+          field={@form[:user_id]}
+          type="select"
+          label="Linked account"
+          options={@user_options}
+          prompt="Select account"
+          required
+        />
+        <%= if length(@user_options) <= 1 do %>
+          <p class="toggle-desc">
+            No customer accounts available.
+            <.link navigate={~p"/admin/users/new"} class="btn-link">Create one</.link>
+            first (role: customer).
+          </p>
+        <% end %>
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Loyalty</p>
+        <div class="grid-2">
+          <.input field={@form[:loyalty_tier]} type="select" label="Tier" options={@tier_options} />
+          <.input field={@form[:loyalty_points]} type="number" label="Points" />
+        </div>
+      </section>
+
+      <hr class="form-divider" />
+
+      <section class="form-section">
+        <p class="section-label">Preferences</p>
+        <label class="toggle-item">
+          <.input field={@form[:opted_in_marketing]} type="checkbox" label="" />
+          <div>
+            <p class="toggle-label">Marketing opt-in</p>
+            <p class="toggle-desc">Receives promotions and updates</p>
+          </div>
+        </label>
+        <.input field={@form[:notes]} type="textarea" label="Notes" />
+      </section>
+    </div>
+
+    <div class="modal-actions">
+      <.link patch={~p"/admin/customers"} class="btn btn--ghost">Cancel</.link>
+      <button type="submit" class="btn btn--primary" id="customer-form-submit">Save customer</button>
+    </div>
+  </.form>
+</div>

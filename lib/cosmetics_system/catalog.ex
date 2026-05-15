@@ -165,6 +165,32 @@ defmodule CosmeticsSystem.Catalog do
     end)
   end
 
+  def primary_image(%Product{images: images}) when is_list(images) do
+    Enum.find(images, & &1.is_primary) || List.first(images)
+  end
+
+  def primary_image(_), do: nil
+
+  def upsert_primary_image(%Product{} = product, url, opts \\ []) when is_binary(url) do
+    alt_text = opts[:alt_text] || product.name
+
+    case primary_image(product) do
+      %ProductImage{} = image ->
+        image
+        |> ProductImage.changeset(%{url: url, alt_text: alt_text})
+        |> Repo.update()
+
+      nil ->
+        add_product_image(product.id, url,
+          alt_text: alt_text,
+          is_primary: true,
+          position: 0
+        )
+    end
+  end
+
+  def delete_product_image(%ProductImage{} = image), do: Repo.delete(image)
+
   # ── Private helpers ─────────────────────────────────────────────────
 
   defp apply_product_filters(query, opts) do
